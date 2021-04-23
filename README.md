@@ -5,4 +5,4 @@ This tool allows users to extract every outfit file in specific arc files. This 
 
 - Extract outfit files from specific arc files.
 - Extract outfit files from all arc files in a given directory
-- Load extracted files as a Mod, compatible with any game version.
+- Load extracted files as a mod, compatible with any game version.
