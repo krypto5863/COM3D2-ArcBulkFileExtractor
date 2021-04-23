@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>ArcToModIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="CM3D2.Toolkit">
+      <HintPath>..\..\..\..\Desktop\Meido Assemblies\COM Assemblies\Resources\CM3D2.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
