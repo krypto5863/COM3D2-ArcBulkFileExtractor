@@ -23,13 +23,13 @@ namespace ArcOutfitExtractorTool
 			Application.Run(new Form1());
 		}
 
-		private static List<String> Extensions = new List<string>() { ".menu", ".tex", ".model", ".mate", ".pmat", ".col", ".psk" };
+		private static List<String> Extensions = new List<string>() { ".menu", ".tex", ".model", ".mate", ".pmat", ".col", ".psk", ".anm" };
 
-		public static void ExtractFromArcs(string[] arcFiles) 
+		public static void ExtractFromArcs(string[] arcFiles)
 		{
 			ArcFileSystem fileSystem = new ArcFileSystem();
 
-			foreach (string f in arcFiles) 
+			foreach (string f in arcFiles)
 			{
 				fileSystem.LoadArc(f);
 			}
@@ -44,10 +44,10 @@ namespace ArcOutfitExtractorTool
 			ExtractFromArcs(files);
 		}
 
-		private static void ExtractFilesFromFileSystem(ArcFileSystem fileSystem) 
+		private static void ExtractFilesFromFileSystem(ArcFileSystem fileSystem)
 		{
 
-			if (fileSystem.Files.Count() == 0) 
+			if (fileSystem.Files.Count() == 0)
 			{
 				return;
 			}
@@ -76,11 +76,20 @@ namespace ArcOutfitExtractorTool
 				{
 					foreach (ArcFileEntry f in filesToExport)
 					{
+						if (f.Name.Contains(".anm") && !f.FullName.Contains("dress"))
+						{
+							continue;
+						}
+
 						var decompressed = f.Pointer.Decompress();
 
-						File.WriteAllBytesAsync(fbd.SelectedPath + "\\" + f.Name, decompressed.Data);
-					}
+						if (!Directory.Exists(fbd.SelectedPath + "\\" + f.Parent.Name)) 
+						{
+							Directory.CreateDirectory(fbd.SelectedPath + "\\" + f.Parent.Name);
+						}
 
+						File.WriteAllBytesAsync(fbd.SelectedPath + "\\" + f.Parent.Name + "\\" + f.Name, decompressed.Data);
+					}
 					MessageBox.Show($"Pulled {filesToExport.Count} files.");
 				}
 			}
