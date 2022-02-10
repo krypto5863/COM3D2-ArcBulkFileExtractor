@@ -2,6 +2,8 @@
 
 https://youtu.be/_z_VYuEJ4MM 1.0  
 https://youtu.be/SPkRGyrUdJk 1.1  
+![2022-02-11 00 36 04](https://user-images.githubusercontent.com/20321215/153441642-16a40a91-afff-48b8-aead-e012359d167c.png)
+1.2
 
 This tool allows users to extract every outfit file in specific arc files. This only extracts outfit files, no more, no less. These files can then be loaded as mods and even modified.
 
