@@ -5,7 +5,7 @@ https://youtu.be/SPkRGyrUdJk 1.1
 ![2022-02-11 00 36 04](https://user-images.githubusercontent.com/20321215/153441642-16a40a91-afff-48b8-aead-e012359d167c.png)
 1.2
 
-This tool allows users to extract every outfit file in specific arc files. This only extracts outfit files, no more, no less. These files can then be loaded as mods and even modified.
+This tool allows users to extract every file in specific arc files. These files can then be loaded as mods and even modified.
 
 To be clear, this tool doesn't actually just extract clothing files but any files that can be found within edit mode. Hair, faces, clothes, whatever. It'll pull those files out and any related to them.
 
@@ -23,6 +23,6 @@ CM3D2.Toolkit.Guest4168Branch.dll down and input folder
 
 # Usage #
 1. Open the Application
-2. Select your arc files, whether by selecting their directory or selecting them each individually
+2. Select your arc files, whether by selecting their directory or selecting them each individually. or drag and drop to Form.
 3. Select where your files are to be placed. It is recommended you create an empty folder and place the output there.
 4. The folder you just created can be loaded as a mod into your mods folder and the outfits will appear in-game.
