@@ -3,6 +3,10 @@ This tool allows users to extract every outfit file in specific arc files. This 
 
 To be clear, this tool doesn't actually just extract clothing files but any files that can be found within edit mode. Hair, faces, clothes, whatever. It'll pull those files out and any related to them.
 
+# need
+
+https://github.com/JustAGuest4168/CM3D2.Toolkit
+
 # Main Points #
 - Extract outfit files from specific arc files.
 - Extract outfit files from all arc files in a given directory

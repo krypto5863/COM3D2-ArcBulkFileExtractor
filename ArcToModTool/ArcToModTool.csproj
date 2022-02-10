@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="CM3D2.Toolkit">
-      <HintPath>..\..\..\..\Desktop\Meido Assemblies\COM Assemblies\Resources\CM3D2.Toolkit.dll</HintPath>
+    <Reference Include="CM3D2.Toolkit.Guest4168Branch">
+      <HintPath>H:\COM3D2\BepinEx\plugins\CM3D2.Toolkit.Guest4168Branch.dll</HintPath>
     </Reference>
   </ItemGroup>
 

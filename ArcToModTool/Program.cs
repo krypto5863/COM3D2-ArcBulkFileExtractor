@@ -1,5 +1,5 @@
-using CM3D2.Toolkit.Arc;
-using CM3D2.Toolkit.Arc.Entry;
+using CM3D2.Toolkit.Guest4168Branch.Arc;
+using CM3D2.Toolkit.Guest4168Branch.Arc.Entry;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +23,7 @@ namespace ArcOutfitExtractorTool
 			Application.Run(new Form1());
 		}
 
-		private static List<String> Extensions = new List<string>() { ".menu", ".tex", ".model", ".mate", ".pmat", ".col", ".psk" };
+		//private static List<String> Extensions = new List<string>() { ".menu", ".tex", ".model", ".mate", ".pmat", ".col", ".psk" };
 
 		public static void ExtractFromArcs(string[] arcFiles) 
 		{
@@ -52,36 +52,43 @@ namespace ArcOutfitExtractorTool
 				return;
 			}
 
-			var filesToExport = fileSystem.Files.Where(x => Extensions.Any(t => x.Name.Contains(t))).ToList();
-
-			if (filesToExport.Count == 0)
-			{
-				MessageBox.Show("No files to export...");
-				return;
-			}
+			//var filesToExport = fileSystem.Files.Where(x => Extensions.Any(t => x.Name.Contains(t))).ToList();
+			//
+			//if (filesToExport.Count == 0)
+			//{
+			//	MessageBox.Show("No files to export...");
+			//	return;
+			//}
 
 			using (var fbd = new FolderBrowserDialog())
 			{
 
-				if (filesToExport.Count == 0)
-				{
-					return;
-				}
+				//if (filesToExport.Count == 0)
+				//{
+				//	return;
+				//}
 
-				MessageBox.Show("We found files to export! Select a destination directory now for files to be placed into.");
+				//MessageBox.Show("We found files to export! Select a destination directory now for files to be placed into.");
 
 				fbd.ShowDialog();
 
 				if (!String.IsNullOrEmpty(fbd.SelectedPath))
 				{
-					foreach (ArcFileEntry f in filesToExport)
+					foreach (ArcFileEntry f in fileSystem.Files.Values)
 					{
 						var decompressed = f.Pointer.Decompress();
 
-						File.WriteAllBytesAsync(fbd.SelectedPath + "\\" + f.Name, decompressed.Data);
+						var p = f.Parent.FullName.Replace("CM3D2ToolKit:", String.Empty);
+
+						if (!Directory.Exists(fbd.SelectedPath + p))
+						{
+							Directory.CreateDirectory(fbd.SelectedPath + p);
+						}
+
+						File.WriteAllBytesAsync(fbd.SelectedPath + p + "\\" + f.Name, decompressed.Data);
 					}
 
-					MessageBox.Show($"Pulled {filesToExport.Count} files.");
+					MessageBox.Show($"Pulled {fileSystem.Files.Count} files.");
 				}
 			}
 		}
