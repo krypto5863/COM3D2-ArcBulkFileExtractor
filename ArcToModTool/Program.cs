@@ -21,8 +21,12 @@ namespace ArcOutfitExtractorTool
 			Application.SetHighDpiMode(HighDpiMode.SystemAware);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Form1());
+			form1 = new Form1();
+			Application.Run(form1);
 		}
+
+		//static Form form;
+		static Form1 form1;
 
 		public static void ExtractFromDirectory(string dir)
 		{
@@ -40,10 +44,15 @@ namespace ArcOutfitExtractorTool
 				if (!String.IsNullOrEmpty(fbd.SelectedPath))
                 {
 					int cnt = 0;
+					form1.textBox1.Clear();
+
 					foreach (string fl in files)
 					{
 						ArcFileSystem fileSystem = new ArcFileSystem();
 						fileSystem.LoadArc(fl);
+
+						form1.textBox1.AppendText($"{fl} , {fileSystem.Files.Count} , {cnt} \r\n");
+						form1.Refresh();
 
 						foreach (ArcFileEntry f in fileSystem.Files.Values)
 						{
@@ -68,7 +77,9 @@ namespace ArcOutfitExtractorTool
 						
 					}
 
-					MessageBox.Show($"Pulled {cnt} files.");
+					form1.textBox1.AppendText($"Pulled {cnt} files. \r\n");
+					//form1.label1.Text = $"Pulled {cnt} files.";
+					//MessageBox.Show($"Pulled {cnt} files.");
                 }
 			}
 		}
