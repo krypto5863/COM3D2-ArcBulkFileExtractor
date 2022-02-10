@@ -1,6 +1,7 @@
 # COM3D2-Arc-Outfits-Extractor
 
-https://youtu.be/_z_VYuEJ4MM  
+https://youtu.be/_z_VYuEJ4MM 1.0  
+https://youtu.be/SPkRGyrUdJk 1.1  
 
 This tool allows users to extract every outfit file in specific arc files. This only extracts outfit files, no more, no less. These files can then be loaded as mods and even modified.
 
