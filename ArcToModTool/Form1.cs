@@ -19,7 +19,7 @@ namespace ArcOutfitExtractorTool
 
 		private void ConvertButton_click(object sender, EventArgs e)
 		{
-			var fileOpen = new System.Windows.Forms.OpenFileDialog();
+            OpenFileDialog fileOpen = new System.Windows.Forms.OpenFileDialog();
 
 			fileOpen.Filter = "Arc File (*.arc)|*.arc";
 
@@ -29,13 +29,8 @@ namespace ArcOutfitExtractorTool
 
 			if (!String.IsNullOrEmpty(fileOpen.FileName)) 
 			{
-				Program.ExtractFromArcs(fileOpen.FileNames);
+				Program.ExtractFilesFromFiles(fileOpen.FileNames);
 			}
-		}
-
-		private void Form1_Load(object sender, EventArgs e)
-		{
-
 		}
 		private void DirectoryConvertButton_Click(object sender, EventArgs e)
 		{
@@ -48,5 +43,29 @@ namespace ArcOutfitExtractorTool
 				Program.ExtractFromDirectory(fileOpen.SelectedPath);
 			}
 		}
-	}
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+			if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+
+			//출처: https://nantano1.tistory.com/entry/C-윈폼에-파일을-드래그-앤-드랍-Drag-Drop-File [일상의 기록들]
+		}
+
+        private void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+			
+			Program.ExtractFilesFromFiles(files);
+
+			//foreach (string file in files)
+			//{
+			//	//Console.WriteLine(file);
+			//}
+
+
+
+			//출처: https://nantano1.tistory.com/entry/C-윈폼에-파일을-드래그-앤-드랍-Drag-Drop-File [일상의 기록들]
+
+		}
+    }
 }

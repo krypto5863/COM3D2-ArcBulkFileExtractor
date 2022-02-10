@@ -2,6 +2,7 @@ using CM3D2.Toolkit.Guest4168Branch.Arc;
 using CM3D2.Toolkit.Guest4168Branch.Arc.Entry;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,73 +24,52 @@ namespace ArcOutfitExtractorTool
 			Application.Run(new Form1());
 		}
 
-		//private static List<String> Extensions = new List<string>() { ".menu", ".tex", ".model", ".mate", ".pmat", ".col", ".psk" };
-
-		public static void ExtractFromArcs(string[] arcFiles) 
-		{
-			ArcFileSystem fileSystem = new ArcFileSystem();
-
-			foreach (string f in arcFiles) 
-			{
-				fileSystem.LoadArc(f);
-			}
-
-			ExtractFilesFromFileSystem(fileSystem);
-		}
-
 		public static void ExtractFromDirectory(string dir)
 		{
 			string[] files = Directory.GetFiles(dir, "*.arc", SearchOption.AllDirectories);
 
-			ExtractFromArcs(files);
+			ExtractFilesFromFiles(files);
 		}
 
-		private static void ExtractFilesFromFileSystem(ArcFileSystem fileSystem) 
+		public static void ExtractFilesFromFiles(string[] files)
 		{
-
-			if (fileSystem.Files.Count() == 0) 
-			{
-				return;
-			}
-
-			//var filesToExport = fileSystem.Files.Where(x => Extensions.Any(t => x.Name.Contains(t))).ToList();
-			//
-			//if (filesToExport.Count == 0)
-			//{
-			//	MessageBox.Show("No files to export...");
-			//	return;
-			//}
-
 			using (var fbd = new FolderBrowserDialog())
 			{
-
-				//if (filesToExport.Count == 0)
-				//{
-				//	return;
-				//}
-
-				//MessageBox.Show("We found files to export! Select a destination directory now for files to be placed into.");
-
 				fbd.ShowDialog();
 
 				if (!String.IsNullOrEmpty(fbd.SelectedPath))
-				{
-					foreach (ArcFileEntry f in fileSystem.Files.Values)
+                {
+					int cnt = 0;
+					foreach (string fl in files)
 					{
-						var decompressed = f.Pointer.Decompress();
+						ArcFileSystem fileSystem = new ArcFileSystem();
+						fileSystem.LoadArc(fl);
 
-						var p = f.Parent.FullName.Replace("CM3D2ToolKit:", String.Empty);
-
-						if (!Directory.Exists(fbd.SelectedPath + p))
+						foreach (ArcFileEntry f in fileSystem.Files.Values)
 						{
-							Directory.CreateDirectory(fbd.SelectedPath + p);
+
+							var p = f.Parent.FullName.Replace("CM3D2ToolKit:", String.Empty);
+
+							//Debug.WriteLine($"{f.Name} , {f.FullName}");
+							//Debug.WriteLine($"{p} ,{f.Parent.FullName} ");
+							//Debug.WriteLine($"{f.FileSystem.Name} , {f.FileSystem.Root.Name}");
+
+							if (!Directory.Exists(fbd.SelectedPath + p))
+							{
+								Directory.CreateDirectory(fbd.SelectedPath + p);
+							}
+
+							var decompressed = f.Pointer.Decompress();
+
+							File.WriteAllBytesAsync(fbd.SelectedPath + p + "\\" + f.Name, decompressed.Data);
 						}
 
-						File.WriteAllBytesAsync(fbd.SelectedPath + p + "\\" + f.Name, decompressed.Data);
+						cnt += fileSystem.Files.Count;
+						
 					}
 
-					MessageBox.Show($"Pulled {fileSystem.Files.Count} files.");
-				}
+					MessageBox.Show($"Pulled {cnt} files.");
+                }
 			}
 		}
 	}
