@@ -1,35 +1,33 @@
-using CM3D2.Toolkit.Arc;
-using CM3D2.Toolkit.Arc.Entry;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Net.Mime;
+using CM3D2.Toolkit.Guest4168Branch.Arc;
 
-namespace ArcOutfitExtractorTool
+namespace ArcToModTool
 {
-	static class Program
+	internal static class Program
 	{
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main()
+		private static void Main()
 		{
-			Application.SetHighDpiMode(HighDpiMode.SystemAware);
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Form1());
+			MediaTypeNames.Application.SetHighDpiMode(HighDpiMode.SystemAware);
+			MediaTypeNames.Application.EnableVisualStyles();
+			MediaTypeNames.Application.SetCompatibleTextRenderingDefault(false);
+			MediaTypeNames.Application.Run(new Form1());
 		}
 
-		private static List<String> Extensions = new List<string>() { ".menu", ".tex", ".model", ".mate", ".pmat", ".col", ".psk", ".anm" };
+		private static readonly List<string> Extensions = new() { ".menu", ".tex", ".model", ".mate", ".pmat", ".col", ".psk", ".anm" };
 
-		public static void ExtractFromArcs(string[] arcFiles)
+		private static void ExtractFromArcs(IEnumerable<string> arcFiles)
 		{
-			ArcFileSystem fileSystem = new ArcFileSystem();
+			var fileSystem = new ArcFileSystem();
 
-			foreach (string f in arcFiles)
+			foreach (var f in arcFiles)
 			{
 				fileSystem.LoadArc(f);
 			}
@@ -37,62 +35,65 @@ namespace ArcOutfitExtractorTool
 			ExtractFilesFromFileSystem(fileSystem);
 		}
 
-		public static void ExtractFromDirectory(string dir)
-		{
-			string[] files = Directory.GetFiles(dir, "*.arc", SearchOption.AllDirectories);
-
-			ExtractFromArcs(files);
-		}
-
 		private static void ExtractFilesFromFileSystem(ArcFileSystem fileSystem)
 		{
 
-			if (fileSystem.Files.Count() == 0)
+			if (!fileSystem.Files.Any())
 			{
 				return;
 			}
 
-			var filesToExport = fileSystem.Files.Where(x => Extensions.Any(t => x.Name.Contains(t))).ToList();
+			var filesToExport = fileSystem.Files
+				.Where(x => Extensions.Any(t => x.Value.Name.Contains(t)))
+				.ToList();
 
 			if (filesToExport.Count == 0)
 			{
-				MessageBox.Show("No files to export...");
+				MessageBox.Show(@"No files to export...");
 				return;
 			}
 
-			using (var fbd = new FolderBrowserDialog())
+			using var fbd = new FolderBrowserDialog();
+			if (filesToExport.Count == 0)
 			{
-
-				if (filesToExport.Count == 0)
-				{
-					return;
-				}
-
-				MessageBox.Show("We found files to export! Select a destination directory now for files to be placed into.");
-
-				fbd.ShowDialog();
-
-				if (!String.IsNullOrEmpty(fbd.SelectedPath))
-				{
-					foreach (ArcFileEntry f in filesToExport)
-					{
-						if (f.Name.Contains(".anm") && !f.FullName.Contains("dress"))
-						{
-							continue;
-						}
-
-						var decompressed = f.Pointer.Decompress();
-
-						if (!Directory.Exists(fbd.SelectedPath + "\\" + f.Parent.Name)) 
-						{
-							Directory.CreateDirectory(fbd.SelectedPath + "\\" + f.Parent.Name);
-						}
-
-						File.WriteAllBytesAsync(fbd.SelectedPath + "\\" + f.Parent.Name + "\\" + f.Name, decompressed.Data);
-					}
-					MessageBox.Show($"Pulled {filesToExport.Count} files.");
-				}
+				return;
 			}
+
+			MessageBox.Show(@"We found files to export! Select a destination directory now for files to be placed into.");
+
+			fbd.ShowDialog();
+
+			if (string.IsNullOrEmpty(fbd.SelectedPath))
+			{
+				return;
+			}
+
+			foreach (var f in filesToExport)
+			{
+				if (f.Value.Name.Contains(".anm") && !f.Value.FullName.Contains("dress"))
+				{
+					continue;
+				}
+
+				var decompressed = f.Value.Pointer.Decompress();
+				var folderName = RemoveInvalidChars(f.Value.Parent.Name);
+				var fileName = RemoveInvalidChars(f.Value.Name);
+
+				var subDirectory = Path.Combine(fbd.SelectedPath, folderName);
+				var fullDirectory = Path.Combine(subDirectory, fileName);
+
+				if (!Directory.Exists(subDirectory))
+				{
+					Directory.CreateDirectory(subDirectory);
+				}
+
+				File.WriteAllBytesAsync(fullDirectory, decompressed.Data);
+			}
+			MessageBox.Show($@"Pulled {filesToExport.Count} files.");
+		}
+		private static string RemoveInvalidChars(string filename)
+		{
+			return string.Concat(filename.Split(Path.GetInvalidFileNameChars()));
 		}
 	}
 }
