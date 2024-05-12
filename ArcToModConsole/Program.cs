@@ -34,7 +34,7 @@ namespace ArcBulkFileExtractor
 				description:
 				"The file extensions to extract from the arc files." +
 				"\nIncluding .csv will convert .nei to .csv format." +
-				"\nUsage example: -c .anm .tex .mate")
+				"\nUsage example: -e .anm .tex .mate")
 			{
 				AllowMultipleArgumentsPerToken = true
 			};
